@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3pqi3huf5sb1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3g0td"]
+size = Vector3(1, 1, 10)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+shape = SubResource("BoxShape3D_3g0td")
+debug_color = Color(0.807843, 0, 0.321569, 1)
