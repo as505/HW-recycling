@@ -1,10 +1,14 @@
 using Godot;
 using System;
 
-
-
+// Defines magic numbers 
+static class MAGIC
+{
+    public const float HEIGTH = 5;
+}
 public partial class SolderIronNode : Node3D
 {
+
     public bool Equiped { get; set; }
     // Let GUI equip and un-equip item
     [Signal]
@@ -13,7 +17,7 @@ public partial class SolderIronNode : Node3D
     public override void _Ready()
     {
         // Spawn off-screen
-        this.Position = new Vector3((float)0, (float)0, (float)5);
+        this.Position = new Vector3((float)0, (float)0, (float)MAGIC.HEIGTH);
         // By default tool is not equiped
         this.Equiped = true;
 
@@ -28,7 +32,7 @@ public partial class SolderIronNode : Node3D
         return;
     }
 
-    
+
     private void TrackMousePos()
     {
         var y = this.Position.Y;
@@ -38,7 +42,7 @@ public partial class SolderIronNode : Node3D
         Camera3D camera = this.GetViewport().GetCamera3D();
         // Translates cusor on screen to in-game 3d coordinate location
         // Uses Y axis of laser
-        Vector3 projectedCursorCoord = camera.ProjectPosition(mousePosition, 5);
+        Vector3 projectedCursorCoord = camera.ProjectPosition(mousePosition, MAGIC.HEIGTH);
 
         // Switch Z and Y axis from projection
         Vector3 newPos = new Vector3(projectedCursorCoord.X, -projectedCursorCoord.Z, projectedCursorCoord.Y);

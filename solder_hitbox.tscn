@@ -1,13 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://d3pqi3huf5sb1"]
+[gd_scene load_steps=3 format=3 uid="uid://d3pqi3huf5sb1"]
+
+[ext_resource type="Script" uid="uid://2f5eljnvwahb" path="res://SolderJointArea3d.cs" id="1_srt15"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3g0td"]
 size = Vector3(1, 1, 10)
 
 [node name="Node3D" type="Node3D"]
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="SolderJointArea3D" type="Area3D" parent="."]
+script = ExtResource("1_srt15")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="SolderJointCollisionShape3D" type="CollisionShape3D" parent="SolderJointArea3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
 shape = SubResource("BoxShape3D_3g0td")
 debug_color = Color(0.807843, 0, 0.321569, 1)
+
+[connection signal="area_entered" from="SolderJointArea3D" to="SolderJointArea3D" method="_on_area_entered"]
