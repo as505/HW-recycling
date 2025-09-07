@@ -5,11 +5,7 @@ using System;
 
 public partial class SolderIronNode : Node3D
 {
-    // This is the gameplay border not including GUI, TODO define outside of this file 
-    public const int GAMEHEIGHT = 100;
-    public const int GAMEWIDTH = 100;
     public bool Equiped { get; set; }
-
     // Let GUI equip and un-equip item
     [Signal]
     public delegate void EquipToggleEventHandler();
@@ -17,7 +13,7 @@ public partial class SolderIronNode : Node3D
     public override void _Ready()
     {
         // Spawn off-screen
-        this.Position = new Vector3((float)0, (float)0, (float)1);
+        this.Position = new Vector3((float)0, (float)0, (float)5);
         // By default tool is not equiped
         this.Equiped = true;
 
@@ -32,40 +28,22 @@ public partial class SolderIronNode : Node3D
         return;
     }
 
-    private Vector2 ConvertScreenResolutionToGamespaceResolution(Vector2 mousePos)
-    {
-        // Get the game window resolution, this is what the cursor uses
-        Vector2 currentGameResolution = DisplayServer.ScreenGetSize();
-
-        float ratio = currentGameResolution.Y / GAMEWIDTH;
-
-        // Convert
-        float convertedX = mousePos.X / ratio;
-        float convertedY = mousePos.Y / ratio;
-
-        // Constrain to gamespace
-        float X = Math.Min(Math.Max(convertedX, 0), GAMEWIDTH);
-        float Y = Math.Min(Math.Max(convertedY, 0), GAMEHEIGHT);
-
-        Vector2 convertedVector = new Vector2(X, Y);
-        return convertedVector;
-    }
     
-    // Track mouse movement along all axis except Z
-    // TODO fix mouse pos -> grid pos
     private void TrackMousePos()
     {
-        // Get Mouse position
+        var y = this.Position.Y;
+        // Get Mouse position on screen
         Vector2 mousePosition = GetViewport().GetMousePosition();
-        // Translate to in game grid
-        mousePosition = ConvertScreenResolutionToGamespaceResolution(mousePosition);
+        // Fetch camera for viewport
+        Camera3D camera = this.GetViewport().GetCamera3D();
+        // Translates cusor on screen to in-game 3d coordinate location
+        // Uses Y axis of laser
+        Vector3 projectedCursorCoord = camera.ProjectPosition(mousePosition, 5);
 
+        // Switch Z and Y axis from projection
+        Vector3 newPos = new Vector3(projectedCursorCoord.X, -projectedCursorCoord.Z, projectedCursorCoord.Y);
 
-        // Get current position of item
-        Vector3 currentPos = this.Position;
-        // Update X and Y to follow mouse, keep Z as is
-        Vector3 newPos = new Vector3(mousePosition.X / 10, -mousePosition.Y / 10, currentPos.Z);
-
+        // Apply new position
         this.Position = newPos;
 
         return;
