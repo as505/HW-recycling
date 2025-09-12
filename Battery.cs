@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using static RotateHandler.RotateComponentClass;
 
 public partial class Battery : Sprite3D
 {
@@ -66,8 +67,10 @@ public partial class Battery : Sprite3D
         if (this.numJoints > 0)
         {
             this.numJoints = this.GetChildCount();
-            if (this.numJoints < 1) {
+            if (this.numJoints < 1)
+            {
                 this.ChangeStateMovable();
+                RotateComponent(this);
             }
         }
 
@@ -78,7 +81,7 @@ public partial class Battery : Sprite3D
     // Changes battery to a grabable object
     private void ChangeStateMovable()
     {
-        this.Rotate(this.Position.Normalized(), 5);
+        this.Rotate(new Vector3(0, 0, 1), (float)0.02);
     }
 
 }
