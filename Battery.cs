@@ -3,6 +3,8 @@ using System;
 
 public partial class Battery : Sprite3D
 {
+    // Number of solder joints
+    private int numJoints;
     public override void _Ready()
     {
         // Load solder scene
@@ -15,7 +17,8 @@ public partial class Battery : Sprite3D
         AddChild(solder_instance_2);
         AddChild(solder_instance_3);
 
-
+        // Remember number of added solder joints
+        this.numJoints = 3;
 
 
         // Create position for solder joint
@@ -45,15 +48,37 @@ public partial class Battery : Sprite3D
         Area3D node_A3d_3 = (Area3D)solder_instance_3.GetChild(0);
         CollisionShape3D node_col_3 = (CollisionShape3D)node_A3d_3.GetChild(0);
 
+
         // Set position and shape
         node_col.Position = pos_solder;
         node_col.Shape = solder_box;
 
         node_col_2.Position = pos_solder_2;
         node_col_2.Shape = solder_box;
-        
+
         node_col_3.Position = pos_solder_3;
         node_col_3.Shape = solder_box;
+    }
+
+    public override void _Process(double delta)
+    {
+        // Check number of children (solder joints alive)
+        if (this.numJoints > 0)
+        {
+            this.numJoints = this.GetChildCount();
+            if (this.numJoints < 1) {
+                this.ChangeStateMovable();
+            }
+        }
+
+
+        base._Process(delta);
+    }
+
+    // Changes battery to a grabable object
+    private void ChangeStateMovable()
+    {
+        this.Rotate(this.Position.Normalized(), 5);
     }
 
 }
